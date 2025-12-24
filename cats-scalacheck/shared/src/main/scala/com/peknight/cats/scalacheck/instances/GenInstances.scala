@@ -1,7 +1,6 @@
 package com.peknight.cats.scalacheck.instances
 
 import cats.{Alternative, Eval, Functor, FunctorFilter, Monad, Monoid}
-import com.peknight.cats.scalacheck.instances
 import org.scalacheck.{Gen, GenOps}
 
 private[scalacheck] trait GenInstances extends GenInstances2:

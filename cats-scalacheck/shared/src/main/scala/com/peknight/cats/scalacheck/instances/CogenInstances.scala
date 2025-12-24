@@ -1,7 +1,6 @@
 package com.peknight.cats.scalacheck.instances
 
 import cats.{ContravariantSemigroupal, MonoidK}
-import com.peknight.cats.scalacheck.instances
 import org.scalacheck.Cogen
 
 private[scalacheck] trait CogenInstances:

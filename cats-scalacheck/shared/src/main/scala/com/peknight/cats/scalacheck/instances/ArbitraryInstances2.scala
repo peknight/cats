@@ -1,7 +1,6 @@
 package com.peknight.cats.scalacheck.instances
 
 import cats.Semigroup
-import com.peknight.cats.scalacheck.instances
 import org.scalacheck.Arbitrary
 
 private[scalacheck] trait ArbitraryInstances2:

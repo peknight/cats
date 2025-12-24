@@ -1,7 +1,6 @@
 package com.peknight.cats.scalacheck.instances
 
 import cats.Semigroup
-import com.peknight.cats.scalacheck.instances
 import org.scalacheck.Gen
 
 private[scalacheck] trait GenInstances2:
