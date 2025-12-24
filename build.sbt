@@ -32,5 +32,6 @@ lazy val catsScalaCheck = (crossProject(JVMPlatform, JSPlatform, NativePlatform)
   .settings(name := "cats-scalacheck")
   .settings(crossDependencies(
     typelevel.cats,
+    peknight.scalaCheck
   ))
   .settings(crossTestDependencies(typelevel.cats.laws))
