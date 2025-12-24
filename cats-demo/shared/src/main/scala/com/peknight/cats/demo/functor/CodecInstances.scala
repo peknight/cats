@@ -1,7 +1,6 @@
 package com.peknight.cats.demo.functor
 
 object CodecInstances:
-
   given stringCodec: Codec[String] with
     def encode(value: String): String = value
     def decode(value: String): String = value
@@ -13,3 +12,4 @@ object CodecInstances:
   given doubleCodec: Codec[Double] = stringCodec.imap(_.toDouble, _.toString)
 
   given boxCodec[A](using c: Codec[A]): Codec[Box[A]] = c.imap(Box(_), _.value)
+end CodecInstances

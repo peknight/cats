@@ -24,3 +24,4 @@ object Tree:
         Branch(left, right) :: tail
       }
     }.head
+end Tree
