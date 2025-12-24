@@ -15,6 +15,9 @@ lazy val cats = (project in file("."))
     catsScalaCheck.jvm,
     catsScalaCheck.js,
     catsScalaCheck.native,
+    catsDemo.jvm,
+    catsDemo.js,
+    catsDemo.native,
   )
 
 lazy val catsCore = (crossProject(JVMPlatform, JSPlatform, NativePlatform) in file("cats-core"))
@@ -35,3 +38,11 @@ lazy val catsScalaCheck = (crossProject(JVMPlatform, JSPlatform, NativePlatform)
     peknight.scalaCheck
   ))
   .settings(crossTestDependencies(typelevel.cats.laws))
+
+lazy val catsDemo = (crossProject(JVMPlatform, JSPlatform, NativePlatform) in file("cats-demo"))
+  .settings(name := "cats-demo")
+  .settings(crossDependencies(typelevel.cats))
+  .settings(crossTestDependencies(
+    typelevel.cats.laws,
+    scalaTest,
+  ))
