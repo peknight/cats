@@ -1,0 +1,17 @@
+package com.peknight.cats.demo.data
+
+import cats.syntax.eq.*
+import cats.{Eq, Functor}
+import com.peknight.cats.demo.typeclass.{Codec, Printable}
+
+final case class Box[A](value: A)
+object Box:
+  given Functor[Box] with
+    def map[A, B](fa: Box[A])(f: A => B): Box[B] = Box(f(fa.value))
+  end given
+  given eqBox[A: Eq]: Eq[Box[A]] with
+    def eqv(x: Box[A], y: Box[A]): Boolean = x.value === y.value
+  end eqBox
+  given boxPrintable[A](using p: Printable[A]): Printable[Box[A]] = p.contramap(_.value)
+  given boxCodec[A](using c: Codec[A]): Codec[Box[A]] = c.imap(Box(_), _.value)
+end Box

@@ -1,15 +1,16 @@
 package com.peknight.cats.demo.monad
 
 import cats.data.Reader
+import com.peknight.cats.demo.data.{Cat, Db}
 import cats.syntax.applicative.*
 
 object ReaderApp extends App:
 
   val catName: Reader[Cat, String] = Reader(_.name)
-  println(catName.run(Cat("Garfield", "lasagne")))
+  println(catName.run(Cat.garfield))
 
   val greetKitty: Reader[Cat, String] = catName.map(name => s"Hello $name")
-  println(greetKitty.run(Cat("Garfield", "lasagne")))
+  println(greetKitty.run(Cat.garfield))
 
   val feedKitty: Reader[Cat, String] = Reader(cat => s"Have a nice bowl of ${cat.favoriteFood}")
 
@@ -19,8 +20,8 @@ object ReaderApp extends App:
       feed <- feedKitty
     yield s"$greet. $feed."
 
-  println(greetAndFeed(Cat("Garfield", "lasagne")))
-  println(greetAndFeed(Cat("Heathcliff", "junk food")))
+  println(greetAndFeed(Cat.garfield))
+  println(greetAndFeed(Cat.heathcliff))
 
   type DbReader[A] = Reader[Db, A]
 

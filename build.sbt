@@ -44,7 +44,4 @@ lazy val catsDemo = (crossProject(JVMPlatform, JSPlatform, NativePlatform) in fi
   .dependsOn(catsCore)
   .settings(name := "cats-demo")
   .settings(crossDependencies(typelevel.cats))
-  .settings(crossTestDependencies(
-    typelevel.cats.laws,
-    scalaTest,
-  ))
+  .settings(crossTestDependencies(scalaTest))

@@ -2,6 +2,7 @@ package com.peknight.cats.demo.introduction
 
 import cats.Show
 import cats.syntax.show.*
+import com.peknight.cats.demo.data.Cat
 import org.scalatest.flatspec.AnyFlatSpec
 
 import java.util.Date
@@ -23,11 +24,10 @@ class ShowFlatSpec extends AnyFlatSpec:
   }
 
   "Show" should "pass for Date" in {
-    import com.peknight.cats.demo.introduction.ShowInstances.given
     val dateShow1: Show[Date] = (date: Date) => s"${date.getTime}ms since the epoch."
     val dataShow2: Show[Date] = Show.show(date => s"${date.getTime}ms since the epoch.")
     given Show[Date] = Show.fromToString
     println(new Date().show)
-    println(Cat("Java", 3, "yellow").show)
+    println(Cat.java.show)
   }
 end ShowFlatSpec

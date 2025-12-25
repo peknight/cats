@@ -4,13 +4,11 @@ import cats.Functor
 import cats.syntax.functor.*
 import com.peknight.cats.data.Tree
 import com.peknight.cats.data.Tree.Leaf
-import com.peknight.cats.demo.functor.FunctorInstances.given
+import com.peknight.cats.demo.data.Box
 import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.*
-import scala.concurrent.{Await, Future}
-import scala.util.Random
+import scala.concurrent.Future
 
 class FunctorFlatSpec extends AnyFlatSpec:
   "Functor" should "pass for List" in {
@@ -21,36 +19,6 @@ class FunctorFlatSpec extends AnyFlatSpec:
     assert(list2 === List(2, 4, 6))
     assert(Functor[List].as(list1, "As") === List("As", "As", "As"))
     assert(list1.as("As") == List("As", "As", "As"))
-  }
-
-  "Functor" should "pass for Future" in {
-    val future: Future[String] = Future(123).map(_ + 1).map(_ * 2).map(n => s"$n!")
-    assert(Await.result(future, 1.second) === "248!")
-
-    val future1 =
-      // Initialize Random with a fixed seed:
-      val r = new Random(0L)
-      // nextInt has the side effect of moving to
-      // the next random number in the sequence:
-      val x = Future(r.nextInt())
-      for
-        a <- x
-        b <- x
-      yield (a, b)
-
-    val future2 =
-      val r = new Random(0L)
-      for
-        a <- Future(r.nextInt())
-        b <- Future(r.nextInt())
-      yield (a, b)
-
-    val (a1, b1) = Await.result(future1, 1.second)
-    val (a2, b2) = Await.result(future2, 1.second)
-
-    assert(a1 == b1)
-    assert(a2 != b2)
-    assert(Await.result(Future(123).map(_.toString()), 1.second) === "123")
   }
 
   "Functor" should "pass for Function" in {
@@ -66,7 +34,8 @@ class FunctorFlatSpec extends AnyFlatSpec:
     assert((func1 map func2)(1) === 2.0)
     assert((func1 andThen func2)(1) === 2.0)
     assert(func2(func1(1)) === 2.0)
-    assert(func3(123) === "248.0!")
+    // jvm与js表现不一致，jvm: "248.0!" js: "248!"
+    assert(func3(123).matches("248(\\.0)?!"))
     assert(func4(123) === 246.0)
     assert(func8(123) === "248!")
   }

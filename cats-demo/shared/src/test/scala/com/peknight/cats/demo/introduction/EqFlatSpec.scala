@@ -3,6 +3,7 @@ package com.peknight.cats.demo.introduction
 import cats.Eq
 import cats.syntax.eq.*
 import cats.syntax.option.*
+import com.peknight.cats.demo.data.Cat
 import org.scalatest.flatspec.AnyFlatSpec
 
 import java.util.Date
@@ -30,10 +31,8 @@ class EqFlatSpec extends AnyFlatSpec:
   }
 
   "Eq" should "pass for Cat" in {
-    import com.peknight.cats.demo.introduction.EqInstances.given
-
-    val cat1 = Cat("Garfield", 38, "orange and black")
-    val cat2 = Cat("Heathcliff", 33, "orange and black")
+    val cat1 = Cat.garfield
+    val cat2 = Cat.heathcliff
 
     assert(!(cat1 === cat2))
     assert(cat1 =!= cat2)

@@ -66,7 +66,7 @@ object Tree:
       loop(List(f(a)), Nil).head
   end given
 
-  given [A : Eq]: Eq[Tree[A]] with
+  given [A: Eq]: Eq[Tree[A]] with
     def eqv(x: Tree[A], y: Tree[A]): Boolean = Eq[List[Option[A]]].eqv(x.toOptionList, y.toOptionList)
   end given
 end Tree

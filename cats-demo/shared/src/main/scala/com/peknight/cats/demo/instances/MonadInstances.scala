@@ -1,0 +1,38 @@
+package com.peknight.cats.demo.instances
+
+import cats.{Id, Monad}
+import com.peknight.cats.data.Tree
+import com.peknight.cats.data.Tree.{Branch, Leaf}
+
+import scala.annotation.tailrec
+
+trait MonadInstances:
+  val idMonad: Monad[Id] = new Monad[Id]:
+    def flatMap[A, B](fa: Id[A])(f: A => Id[B]): Id[B] = f(fa)
+    @tailrec
+    override def tailRecM[A, B](a: A)(f: A => Id[Either[A, B]]): Id[B] = f(a) match
+      case Right(b) => b
+      case Left(la) => tailRecM(la)(f)
+    def pure[A](x: A): Id[A] = x
+
+  val optionMonad: Monad[Option] = new Monad[Option]:
+    def flatMap[A, B](opt: Option[A])(fn: A => Option[B]): Option[B] = opt.flatMap(fn)
+    def pure[A](opt: A): Option[A] = Some(opt)
+    @tailrec
+    def tailRecM[A, B](a: A)(f: A => Option[Either[A, B]]): Option[B] = f(a) match
+      case None => None
+      case Some(Left(a1)) => tailRecM(a1)(f)
+      case Some(Right(b)) => Some(b)
+
+  def treeMonadNonTailRecursive: Monad[Tree] = new Monad[Tree]:
+    def pure[A](x: A): Tree[A] = Tree.leaf(x)
+    def flatMap[A, B](fa: Tree[A])(f: A => Tree[B]): Tree[B] = fa match
+      case Branch(left, right) => Tree.branch(flatMap(left)(f), flatMap(right)(f))
+      case Leaf(leaf) => f(leaf)
+    def tailRecM[A, B](a: A)(f: A => Tree[Either[A, B]]): Tree[B] = flatMap(f(a)) {
+      case Left(value) => tailRecM(value)(f)
+      case Right(value) => Leaf(value)
+    }
+  end treeMonadNonTailRecursive
+end MonadInstances
+object MonadInstances extends MonadInstances
