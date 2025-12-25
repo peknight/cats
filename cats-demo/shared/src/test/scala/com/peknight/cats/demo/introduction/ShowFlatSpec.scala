@@ -11,7 +11,7 @@ class ShowFlatSpec extends AnyFlatSpec:
   // 2.2.0版本后的cats不再需要`import cats.instances`，见https://github.com/typelevel/cats/releases/tag/v2.2.0
   // import cats.instances.int._
   // import cats.instances.string._
-  "Show" should "succeed with Int and String" in {
+  "Show" should "pass for Int and String" in {
     val showInt = Show[Int]
     val showString = Show[String]
     val intAsString: String = showInt.show(123)
@@ -22,7 +22,7 @@ class ShowFlatSpec extends AnyFlatSpec:
     assert("abc".show == "abc")
   }
 
-  "Show" should "succeed with Date" in {
+  "Show" should "pass for Date" in {
     import com.peknight.cats.demo.introduction.ShowInstances.given
     val dateShow1: Show[Date] = (date: Date) => s"${date.getTime}ms since the epoch."
     val dataShow2: Show[Date] = Show.show(date => s"${date.getTime}ms since the epoch.")

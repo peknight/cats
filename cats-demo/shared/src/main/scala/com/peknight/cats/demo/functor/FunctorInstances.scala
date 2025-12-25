@@ -1,7 +1,6 @@
 package com.peknight.cats.demo.functor
 
 import cats.Functor
-import Tree.{Branch, Leaf}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -15,10 +14,4 @@ object FunctorInstances:
 
   def futureFunctor(using ExecutionContext): Functor[Future] = new Functor[Future]:
     def map[A, B](fa: Future[A])(f: A => B): Future[B] = fa.map(f)
-
-  given Functor[Tree] with
-    def map[A, B](fa: Tree[A])(f: A => B): Tree[B] = fa match
-      case Branch(left, right) => Branch(map(left)(f), map(right)(f))
-      case Leaf(value) => Leaf(f(value))
-  end given
 end FunctorInstances

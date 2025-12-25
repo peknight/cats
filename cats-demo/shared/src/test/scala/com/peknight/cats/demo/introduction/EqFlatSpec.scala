@@ -9,7 +9,7 @@ import java.util.Date
 
 class EqFlatSpec extends AnyFlatSpec:
 
-  "Eq" should "succeed with Int" in {
+  "Eq" should "pass for Int" in {
     val eqInt = Eq[Int]
     assert(eqInt.eqv(123, 123))
     assert(!eqInt.eqv(123, 234))
@@ -18,7 +18,7 @@ class EqFlatSpec extends AnyFlatSpec:
     assert(1.some =!= none[Int])
   }
 
-  "Eq" should "succeed with Date" in {
+  "Eq" should "pass for Date" in {
     given Eq[Date] = Eq.instance[Date] { (date1, date2) =>
       date1.getTime === date2.getTime
     }
@@ -29,7 +29,7 @@ class EqFlatSpec extends AnyFlatSpec:
     assert(!(x === y))
   }
 
-  "Eq" should "succeed with Cat" in {
+  "Eq" should "pass for Cat" in {
     import com.peknight.cats.demo.introduction.EqInstances.given
 
     val cat1 = Cat("Garfield", 38, "orange and black")

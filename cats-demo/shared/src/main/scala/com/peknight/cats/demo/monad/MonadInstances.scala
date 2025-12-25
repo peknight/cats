@@ -1,8 +1,8 @@
 package com.peknight.cats.demo.monad
 
 import cats.{Id, Monad}
-import com.peknight.cats.demo.functor.Tree
-import Tree.{Branch, Leaf}
+import com.peknight.cats.data.Tree
+import com.peknight.cats.data.Tree.{Branch, Leaf}
 
 import scala.annotation.tailrec
 
@@ -40,40 +40,5 @@ object MonadInstances:
       case Left(value) => tailRecM(value)(f)
       case Right(value) => Leaf(value)
     }
-
-  given treeMonad: Monad[Tree] with
-    def pure[A](x: A): Tree[A] = Tree.leaf(x)
-    def flatMap[A, B](fa: Tree[A])(f: A => Tree[B]): Tree[B] = fa match
-      case Branch(left, right) => Tree.branch(flatMap(left)(f), flatMap(right)(f))
-      case Leaf(leaf) => f(leaf)
-
-    /**
-     * see: https://stackoverflow.com/questions/44504790/cats-non-tail-recursive-tailrecm-method-for-monads
-     * 把树展开了再重构
-     *
-     * ↓ Branch(Leaf(a), Branch(Branch(Leaf(b), Leaf(c)), Leaf(d))) :: Nil && Nil
-     * ↓ Leaf(a) :: Branch(Branch(Leaf(b), Leaf(c)), Leaf(d)) :: Nil && None :: Nil
-     * ↓ Branch(Branch(Leaf(b), Leaf(c)), Leaf(d)) :: Nil && Some(a) :: None :: Nil
-     * ↓ Branch(Leaf(b), Leaf(c)) :: Leaf(d) :: Nil && None :: Some(a) :: None :: Nil
-     * ↓ Leaf(b) :: Leaf(c) :: Leaf(d) :: Nil && None :: None :: Some(a) :: None :: Nil
-     * - Nil && Some(d) :: Some(c) :: Some(b) :: None :: None :: Some(a) :: None :: Nil
-     * ↑ Leaf(b) :: Leaf(c) :: Leaf(d) :: Nil && None :: None :: Some(a) :: None :: Nil
-     * ↑ Branch(Leaf(b), Leaf(c)) :: Leaf(d) :: Nil && None :: Some(a) :: None :: Nil
-     * ↑ Branch(Branch(Leaf(b), Leaf(c)), Leaf(d)) :: Nil && Some(a) :: None :: Nil
-     * ↑ Leaf(a) :: Branch(Branch(Leaf(b), Leaf(c)), Leaf(d)) :: Nil && None :: Nil
-     * ↑ Branch(Leaf(a), Branch(Branch(Leaf(b), Leaf(c)), Leaf(d))) :: Nil && Nil
-     */
-    def tailRecM[A, B](a: A)(f: A => Tree[Either[A, B]]): Tree[B] =
-      @tailrec
-      def loop(open: List[Tree[Either[A, B]]], closed: List[Option[Tree[B]]]): List[Tree[B]] = open match
-        case Branch(l, r) :: next => loop(l :: r :: next, None :: closed)
-        case Leaf(Left(value)) :: next => loop(f(value):: next, closed)
-        case Leaf(Right(value)) :: next => loop(next, Some(pure(value)) :: closed)
-        case Nil => closed.foldLeft(Nil: List[Tree[B]]) { (acc: List[Tree[B]], maybeTree: Option[Tree[B]]) =>
-          maybeTree.map(_ :: acc) // Option[List[Tree[B]]]
-            .getOrElse {
-              val left :: right :: tail = acc: @unchecked
-              Tree.branch(left, right) :: tail
-            }
-        }
-      loop(List(f(a)), Nil).head
+  end treeMonadNonTailRecursive
+end MonadInstances

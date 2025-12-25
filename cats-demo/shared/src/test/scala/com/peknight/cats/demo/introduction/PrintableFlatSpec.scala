@@ -5,7 +5,7 @@ import com.peknight.cats.demo.introduction.PrintableSyntax.*
 import org.scalatest.flatspec.AnyFlatSpec
 
 class PrintableFlatSpec extends AnyFlatSpec:
-  "Printable" should "succeed" in {
+  "Printable" should "pass" in {
     val cat = Cat("Java", 12, "Yellow")
     Printable.print(cat)
     cat.print

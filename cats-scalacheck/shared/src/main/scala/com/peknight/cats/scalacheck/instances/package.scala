@@ -6,4 +6,5 @@ package object instances:
   object cogen extends CogenInstances
 
   object nonEmptyList extends NonEmptyListInstances
+  object tree extends TreeInstances
 end instances

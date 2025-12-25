@@ -5,7 +5,7 @@ import com.peknight.cats.demo.introduction.JsonWriterInstances.given
 import org.scalatest.flatspec.AnyFlatSpec
 
 class JsonFlatSpec extends AnyFlatSpec:
-  "Json" should "succeed" in {
+  "Json" should "pass" in {
     println(Json.toJson(Person("Dave", "dave@example.com")))
     println(Person("Dave", "dave@example.com").toJson)
     println(summon[JsonWriter[String]])
