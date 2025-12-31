@@ -5,11 +5,14 @@ import cats.syntax.show.*
 import cats.{Eq, Show}
 import com.peknight.cats.demo.typeclass.Printable
 
-final case class Cat(name: String, age: Int, color: String, favoriteFood: String)
+final case class Cat(name: String, age: Int, color: String, favoriteFoods: List[String]):
+  def favoriteFood: String = favoriteFoods.headOption.getOrElse("Nothing")
+  def yearOfBirth: Int = 2025 - age;
+end Cat
 object Cat:
-  val garfield: Cat = Cat("Garfield", 38, "orange and black", "lasagne")
-  val heathcliff: Cat = Cat("Heathcliff", 33, "orange and black", "junk food")
-  val java: Cat = Cat("Java", 12, "Yellow", "java")
+  val garfield: Cat = Cat("Garfield", 38, "Orange and black", List("Lasagne"))
+  val heathcliff: Cat = Cat("Heathcliff", 33, "Orange and black", List("Junk Food"))
+  val java: Cat = Cat("Java", 12, "Yellow", List("Java"))
 
   given catEq: Eq[Cat] = Eq.instance[Cat] { (cat1, cat2) =>
     (cat1.name === cat2.name) &&
