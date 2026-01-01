@@ -1,8 +1,9 @@
-package com.peknight.cats.demo.casestudy.crdt
+package com.peknight.cats.demo.data
 
 import cats.kernel.CommutativeMonoid
 import cats.syntax.foldable.*
 import cats.syntax.semigroup.*
+import com.peknight.cats.demo.typeclass.BoundedSemiLattice
 
 final case class OldGCounter[A](counters: Map[String, A]):
 
@@ -15,3 +16,4 @@ final case class OldGCounter[A](counters: Map[String, A]):
   )
 
   def total(using CommutativeMonoid[A]): A = counters.values.toList.combineAll
+end OldGCounter

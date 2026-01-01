@@ -1,9 +1,11 @@
-package com.peknight.cats.demo.casestudy.crdt
+package com.peknight.cats.demo.data
 
 import cats.kernel.CommutativeMonoid
 import cats.syntax.foldable.*
 import cats.syntax.semigroup.*
-import KeyValueStore.*
+import com.peknight.cats.demo.data.KeyValueStore
+import com.peknight.cats.demo.data.KeyValueStore.*
+import com.peknight.cats.demo.typeclass.BoundedSemiLattice
 
 trait GCounter[F[_, _], K, V]:
   def increment(f: F[K, V])(k: K, v: V)(using CommutativeMonoid[V]): F[K, V]
@@ -11,10 +13,9 @@ trait GCounter[F[_, _], K, V]:
   def merge(f1: F[K, V], f2: F[K, V])(using BoundedSemiLattice[V]): F[K, V]
 
   def total(f: F[K, V])(using CommutativeMonoid[V]): V
-
+end GCounter
 object GCounter:
-
-  def apply[F[_, _], K, V](using counter: GCounter[F, K, V]) = counter
+  def apply[F[_, _], K, V](using counter: GCounter[F, K, V]): GCounter[F, K, V] = counter
 
   given mapGCountInstance[K, V]: GCounter[Map, K, V] with
     def increment(f: Map[K, V])(k: K, v: V)(using m: CommutativeMonoid[V]): Map[K, V] =
@@ -24,6 +25,7 @@ object GCounter:
     def merge(f1: Map[K, V], f2: Map[K, V])(using BoundedSemiLattice[V]): Map[K, V] = f1 |+| f2
 
     def total(f: Map[K, V])(using m: CommutativeMonoid[V]): V = f.values.toList.combineAll
+  end mapGCountInstance
 
   given gcounterInstance[F[_, _], K, V](using KeyValueStore[F], CommutativeMonoid[F[K, V]]): GCounter[F, K, V] with
     def increment(f: F[K, V])(k: K, v: V)(using m: CommutativeMonoid[V]): F[K, V] =
@@ -33,3 +35,5 @@ object GCounter:
     def merge(f1: F[K, V], f2: F[K, V])(using BoundedSemiLattice[V]): F[K, V] = f1 |+| f2
 
     def total(f: F[K, V])(using CommutativeMonoid[V]): V = f.values.combineAll
+  end gcounterInstance
+end GCounter

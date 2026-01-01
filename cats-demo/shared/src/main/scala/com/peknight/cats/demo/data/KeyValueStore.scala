@@ -1,4 +1,4 @@
-package com.peknight.cats.demo.casestudy.crdt
+package com.peknight.cats.demo.data
 
 trait KeyValueStore[F[_, _]]:
   def put[K, V](f: F[K, V])(k: K, v: V): F[K, V]
@@ -8,15 +8,17 @@ trait KeyValueStore[F[_, _]]:
   def getOrElse[K, V](f: F[K, V])(k: K, default: V): V = get(f)(k).getOrElse(default)
 
   def values[K, V](f: F[K, V]): List[V]
-
+end KeyValueStore
 object KeyValueStore:
   given KeyValueStore[Map] with
     def put[K, V](f: Map[K, V])(k: K, v: V): Map[K, V] = f + (k -> v)
     def get[K, V](f: Map[K, V])(k: K): Option[V] = f.get(k)
     def values[K, V](f: Map[K, V]): List[V] = f.values.toList
-
+  end given
   extension [F[_, _], K, V] (f: F[K, V])
     def put(key: K, value: V)(using kvs: KeyValueStore[F]): F[K, V] = kvs.put(f)(key, value)
     def get(key: K)(using kvs: KeyValueStore[F]): Option[V] = kvs.get(f)(key)
     def getOrElse(key: K, default: V)(using kvs: KeyValueStore[F]): V = kvs.getOrElse(f)(key, default)
     def values(using kvs: KeyValueStore[F]): List[V] = kvs.values(f)
+  end extension
+end KeyValueStore
