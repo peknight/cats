@@ -40,7 +40,7 @@ class DataValidationFlatSpec extends AnyFlatSpec:
 
   val step3: Kleisli[List, Int, Int] = Kleisli(x => List(x * 2, x / 2))
 
-  val pipeline = step1 andThen step2 andThen step3
+  val pipeline: Kleisli[List, Int, Int] = step1 andThen step2 andThen step3
 
   "Data Validation" should "pass" in {
     assert(checkF(5).isLeft)
