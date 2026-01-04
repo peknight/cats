@@ -1,4 +1,4 @@
-package com.peknight.cats.demo.casestudy.datavalidation
+package com.peknight.cats.demo.typeclass
 
 import cats.Semigroup
 import cats.syntax.either.*
@@ -14,3 +14,4 @@ final case class CheckF[E, A](func: A => Either[E, A]):
       case (Right(_), Left(e)) => e.asLeft[A]
       case (Right(_), Right(_)) => a.asRight[E]
   }
+end CheckF

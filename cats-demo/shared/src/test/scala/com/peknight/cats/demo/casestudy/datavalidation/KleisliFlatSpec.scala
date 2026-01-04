@@ -2,8 +2,11 @@ package com.peknight.cats.demo.casestudy.datavalidation
 
 import cats.data.{Kleisli, NonEmptyList}
 import cats.syntax.apply.*
+import com.peknight.cats.demo.data.User
+import com.peknight.cats.demo.typeclass.Predicate
+import org.scalatest.flatspec.AnyFlatSpec
 
-object KleisliApp extends App:
+class KleisliFlatSpec extends AnyFlatSpec:
   type Errors = NonEmptyList[String]
   type Result[A] = Either[Errors, A]
   type Check[A, B] = Kleisli[Result, A, B]
@@ -54,5 +57,8 @@ object KleisliApp extends App:
   def createUser(username: String, email: String): Either[Errors, User] =
     (checkUsername.run(username), checkEmail.run(email)).mapN(User.apply)
 
-  println(createUser("Noel", "noel@underscore.io"))
-  println(createUser("", "dave@underscore.io@io"))
+  "Kleisli" should "pass for createUser" in {
+    assert(createUser("Noel", "noel@underscore.io") === Right(User(0, "Noel", 0, "noel@underscore.io")))
+    assert(createUser("", "dave@underscore.io@io") === Left(NonEmptyList.one("Must be longer than 3 characters")))
+  }
+end KleisliFlatSpec

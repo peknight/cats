@@ -3,12 +3,13 @@ package com.peknight.cats.demo.casestudy.mapreduce
 import cats.Monad
 import cats.kernel.Monoid
 import cats.syntax.traverse.*
+import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, Future}
 
-object FutureApp extends App:
+class FutureFlatSpec extends AnyFlatSpec:
   val future1 = Future { (1 to 100).toList.sum }
 
   val future2 = Future { (100 to 200).toList.sum }
