@@ -13,7 +13,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'sbt test'
+                sh 'sbt -J-Xmx2G test'
             }
         }
         stage('Publish Local') {
