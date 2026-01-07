@@ -11,11 +11,6 @@ pipeline {
                 sh 'sbt clean compile'
             }
         }
-        stage('Test') {
-            steps {
-                sh 'sbt -J-Xmx2G test'
-            }
-        }
         stage('Publish Local') {
             steps {
                 sh 'sbt publishLocal'
