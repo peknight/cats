@@ -14,10 +14,8 @@ lazy val cats = (project in file("."))
     catsScodecBits.native,
     catsScalaCheck.jvm,
     catsScalaCheck.js,
-    catsScalaCheck.native,
     catsDemo.jvm,
     catsDemo.js,
-    catsDemo.native,
   )
 
 lazy val catsCore = (crossProject(JVMPlatform, JSPlatform, NativePlatform) in file("cats-core"))
@@ -31,7 +29,7 @@ lazy val catsScodecBits = (crossProject(JVMPlatform, JSPlatform, NativePlatform)
     scodec.bits
   ))
 
-lazy val catsScalaCheck = (crossProject(JVMPlatform, JSPlatform, NativePlatform) in file("cats-scalacheck"))
+lazy val catsScalaCheck = (crossProject(JVMPlatform, JSPlatform) in file("cats-scalacheck"))
   .dependsOn(catsCore)
   .settings(name := "cats-scalacheck")
   .settings(crossDependencies(
@@ -40,7 +38,7 @@ lazy val catsScalaCheck = (crossProject(JVMPlatform, JSPlatform, NativePlatform)
   ))
   .settings(crossTestDependencies(typelevel.cats.laws))
 
-lazy val catsDemo = (crossProject(JVMPlatform, JSPlatform, NativePlatform) in file("cats-demo"))
+lazy val catsDemo = (crossProject(JVMPlatform, JSPlatform) in file("cats-demo"))
   .dependsOn(catsCore)
   .settings(name := "cats-demo")
   .settings(crossDependencies(typelevel.cats))
