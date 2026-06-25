@@ -1,3 +1,4 @@
+import com.peknight.build.gav
 import com.peknight.build.gav.*
 import com.peknight.build.sbt.*
 
@@ -5,41 +6,43 @@ commonSettings
 
 lazy val cats = (project in file("."))
   .settings(name := "cats")
-  .aggregate(
-    catsCore.jvm,
-    catsCore.js,
-    catsCore.native,
-    catsScodecBits.jvm,
-    catsScodecBits.js,
-    catsScodecBits.native,
-    catsScalaCheck.jvm,
-    catsScalaCheck.js,
-    catsDemo.jvm,
-    catsDemo.js,
-  )
+  .aggregate(catsCore.projectRefs *)
+  .aggregate(catsScodecBits.projectRefs *)
+  .aggregate(catsScalaCheck.projectRefs *)
+  .aggregate(catsDemo.projectRefs *)
 
-lazy val catsCore = (crossProject(JVMPlatform, JSPlatform, NativePlatform) in file("cats-core"))
+lazy val catsCore = (projectMatrix in file("cats-core"))
   .settings(name := "cats-core")
-  .settings(crossDependencies(typelevel.cats))
+  .settings(libraryDependencies ++= dependencies(typelevel.cats))
+  .jvmPlatform(scalaVersions = Seq(scala.scala3.version))
+  .jsPlatform(scalaVersions = Seq(scala.scala3.version))
+  .nativePlatform(scalaVersions = Seq(scala.scala3.version))
 
-lazy val catsScodecBits = (crossProject(JVMPlatform, JSPlatform, NativePlatform) in file("cats-scodec-bits"))
+lazy val catsScodecBits = (projectMatrix in file("cats-scodec-bits"))
   .settings(name := "cats-scodec-bits")
-  .settings(crossDependencies(
+  .settings(libraryDependencies ++= dependencies(
     typelevel.cats,
     scodec.bits
   ))
+  .jvmPlatform(scalaVersions = Seq(scala.scala3.version))
+  .jsPlatform(scalaVersions = Seq(scala.scala3.version))
+  .nativePlatform(scalaVersions = Seq(scala.scala3.version))
 
-lazy val catsScalaCheck = (crossProject(JVMPlatform, JSPlatform) in file("cats-scalacheck"))
+lazy val catsScalaCheck = (projectMatrix in file("cats-scalacheck"))
   .dependsOn(catsCore)
   .settings(name := "cats-scalacheck")
-  .settings(crossDependencies(
+  .settings(libraryDependencies ++= dependencies(
     typelevel.cats,
     peknight.scalaCheck
   ))
-  .settings(crossTestDependencies(typelevel.cats.laws))
+  .settings(libraryDependencies ++= testDependencies(typelevel.cats.laws))
+  .jvmPlatform(scalaVersions = Seq(scala.scala3.version))
+  .jsPlatform(scalaVersions = Seq(scala.scala3.version))
 
-lazy val catsDemo = (crossProject(JVMPlatform, JSPlatform) in file("cats-demo"))
+lazy val catsDemo = (projectMatrix in file("cats-demo"))
   .dependsOn(catsCore)
   .settings(name := "cats-demo")
-  .settings(crossDependencies(typelevel.cats))
-  .settings(crossTestDependencies(scalaTest))
+  .settings(libraryDependencies ++= dependencies(typelevel.cats))
+  .settings(libraryDependencies ++= testDependencies(scalaTest))
+  .jvmPlatform(scalaVersions = Seq(scala.scala3.version))
+  .jsPlatform(scalaVersions = Seq(scala.scala3.version))
