@@ -7,7 +7,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 
 class JsonFlatSpec extends AnyFlatSpec:
   "Json" should "pass" in {
-    summon[JsonWriter[String]]
+    val writer = summon[JsonWriter[String]]
     println(Json.toJson(Person("Dave", "dave@example.com")))
     println(Person("Dave", "dave@example.com").toJson)
     println(Json.toJson("A string!"))
